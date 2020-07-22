@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 const CreateExercise = () => {
 
@@ -14,8 +15,10 @@ const CreateExercise = () => {
     useEffect(() => {
         setExercise({
             ...exercise,
-            username: 'informagician'
+            username: 'informagician',
+            users:['informagician']
         })
+        // eslint-disable-next-line
     }, [])
 
     const onChange = e => {
@@ -30,8 +33,10 @@ const CreateExercise = () => {
 
         console.log(exercise)
 
-        window.location = '/'
+        // window.location = '/'
     }
+
+    // console.log(exercise.username)
     return (
         <>
             <h1>Create A New Exercise</h1>
@@ -39,10 +44,11 @@ const CreateExercise = () => {
                 <div className="form-group">
                     <label>Username:</label>
                     <select 
-                        ref="userInput" 
+                        // ref="userInput" 
                         required 
                         className="form-control" 
-                        value={exercise.username} 
+                        value={exercise.username}
+                        name="username"
                         onChange={onChange}
                     >
                         {exercise.users.map(user => (
@@ -59,6 +65,7 @@ const CreateExercise = () => {
                     <label>Description:</label>
                     <input type="text"
                         required
+                        name="description"
                         className="form-control"
                         value={exercise.description}
                         onChange={onChange}
@@ -68,6 +75,7 @@ const CreateExercise = () => {
                     <label>Duration (in minutes)</label>
                     <input
                         type="text"
+                        name="duration"
                         className="form-control"
                         value={exercise.duration}
                         onChange={onChange}
@@ -78,6 +86,7 @@ const CreateExercise = () => {
                     <div>
                         <DatePicker
                             selected={exercise.date}
+                            name="date"
                             onChange={onChange}
                         />
                     </div>
