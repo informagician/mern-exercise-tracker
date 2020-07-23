@@ -15,22 +15,25 @@ const CreateExercise = () => {
 
     useEffect(() => {
 
+        let users = []
         axios.get('http://localhost:5000/users')
             .then(res => {
-                let users = []
                 res.data.map(user => {
-                    users.push(user.username)
+                    users.push(user.username)   
                 })
                 setExercise({
                     ...exercise,
+                    username: users[0],
                     users: users
                 })
             })
             .catch(err => console.log(err))
+            
+            // eslint-disable-next-line
+        }, [])
 
-        // eslint-disable-next-line
-    }, [])
-
+    console.log(exercise)
+    
     const onChange = e => {
         setExercise({
             ...exercise,
@@ -40,7 +43,6 @@ const CreateExercise = () => {
 
     const onSubmit = e => {
         e.preventDefault()
-        console.log(exercise)
 
         axios.post('http://localhost:5000/exercises/add', exercise)
             .then(res => console.log(res.data))
@@ -58,7 +60,6 @@ const CreateExercise = () => {
                         // ref="userInput" 
                         required 
                         className="form-control" 
-                        value={exercise.username}
                         name="username"
                         onChange={onChange}
                     >
