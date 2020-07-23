@@ -21,30 +21,41 @@ const EditExercise = props => {
 
         axios.get('http://localhost:5000/exercises/' + id)
             .then(res => {
+                let users = []
+            axios.get('http://localhost:5000/users')
+                .then(res => {
+                    res.data.map(user => {
+                        users.push(user.username)   
+                    })
+                })
+                .catch(err => console.log(err))
+
                 setExercise({
-                    ...exercise,
                     username: res.data.username,
                     description: res.data.description,
                     duration: res.data.duration,
-                    date: new Date(res.data.date)
-                })
-            })
-            .catch(err => console.log(err))
-
-        let users = []
-        axios.get('http://localhost:5000/users')
-            .then(res => {
-                res.data.map(user => {
-                    users.push(user.username)   
-                })
-                setExercise({
-                    ...exercise,
+                    date: new Date(res.data.date),
                     users: users
                 })
             })
-            .catch(err => console.log(err))  
-            // eslint-disable-next-line
-        }, [])
+            .catch(err => console.log(err))
+    }, [])
+
+    // useEffect(() => {
+        
+    //     let users = []
+    //     axios.get('http://localhost:5000/users')
+    //         .then(res => {
+    //             res.data.map(user => {
+    //                 users.push(user.username)   
+    //             })
+    //             setExercise({
+    //                 ...exercise,
+    //                 users: users
+    //             })
+    //         })
+    //         .catch(err => console.log(err))
+    // }, [])
 
     
     const onChange = e => {
@@ -78,14 +89,20 @@ const EditExercise = props => {
                         name="username"
                         onChange={onChange}
                     >
-                        {exercise.users.map(user => (
+                        {exercise.users.map(user => {
+                            user === exercise.username ? (
+
+                            ) : (
+                                
+                            )
                             <option
                                 key={user}
                                 value={user}
+                                // selected={user === exercise.username ? 'selected' : null}
                             >
                                 {user}
                             </option>
-                        ))}
+                        })}
                     </select>
                 </div>
                 <div className="form-group">
