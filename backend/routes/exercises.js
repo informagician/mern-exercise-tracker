@@ -40,7 +40,9 @@ router.delete('/:id', (req,res) => {
         .catch(err => res.status(400).json('Error: ' + err))
 })
 
-router.put('/update/:id', (req,res) => {
+router.post('/update/:id', (req,res) => {
+
+    console.log(req.body)
 
     Exercise.findById(req.params.id)
         .then(exercise => {

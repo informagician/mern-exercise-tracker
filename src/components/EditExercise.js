@@ -6,7 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 const EditExercise = props => {
 
 
-    const [ exercise, setExercise ] = useState({
+    const [exercise, setExercise] = useState({
         username: '',
         description: '',
         duration: 0,
@@ -18,46 +18,31 @@ const EditExercise = props => {
     let id = match.params.id
 
     useEffect(() => {
-
-        axios.get('http://localhost:5000/exercises/' + id)
-            .then(res => {
-                let users = []
-            axios.get('http://localhost:5000/users')
-                .then(res => {
-                    res.data.map(user => {
-                        users.push(user.username)   
-                    })
-                })
-                .catch(err => console.log(err))
-
-                setExercise({
-                    username: res.data.username,
-                    description: res.data.description,
-                    duration: res.data.duration,
-                    date: new Date(res.data.date),
-                    users: users
-                })
-            })
-            .catch(err => console.log(err))
+        
+        initialFetch()
     }, [])
 
-    // useEffect(() => {
-        
-    //     let users = []
-    //     axios.get('http://localhost:5000/users')
-    //         .then(res => {
-    //             res.data.map(user => {
-    //                 users.push(user.username)   
-    //             })
-    //             setExercise({
-    //                 ...exercise,
-    //                 users: users
-    //             })
-    //         })
-    //         .catch(err => console.log(err))
-    // }, [])
+    const initialFetch = async () => {
+        try {
 
+            const exercises = await axios.get("http://localhost:5000/exercises/" + id);
+            const users = await axios.get("http://localhost:5000/users");
+            let modifiedUsers = users.data.map((user) => user.username);
+            setExercise({
+                ...exercise,
+                username: exercises.data.username,
+                description: exercises.data.description,
+                duration: exercises.data.duration,
+                date: new Date(exercises.data.date),
+                users: modifiedUsers,
+            });
+        } catch(error){
+            console.log(error)
+        }
+    };
     
+
+
     const onChange = e => {
         setExercise({
             ...exercise,
@@ -68,7 +53,7 @@ const EditExercise = props => {
     const onSubmit = e => {
         e.preventDefault()
 
-        axios.post('http://localhost:5000/exercises/update/', id)
+        axios.post('http://localhost:5000/exercises/update/'+ id, exercise)
             .then(res => console.log(res.data))
             .catch(err => console.log(err))
 
@@ -82,27 +67,39 @@ const EditExercise = props => {
             <form onSubmit={onSubmit}>
                 <div className="form-group">
                     <label>Username:</label>
-                    <select 
-                        // ref="userInput" 
-                        required 
-                        className="form-control" 
+                    <select
+                        required
+                        className="form-control"
                         name="username"
                         onChange={onChange}
+                        value={exercise.username}
                     >
-                        {exercise.users.map(user => {
-                            user === exercise.username ? (
-
-                            ) : (
-                                
-                            )
+                        {/* {exercise.users.map(user => (
                             <option
                                 key={user}
                                 value={user}
-                                // selected={user === exercise.username ? 'selected' : null}
                             >
                                 {user}
                             </option>
-                        })}
+                        ))} */}
+                        {exercise.users.map(user => (
+                            user === exercise.username ? (
+                            <option
+                                key={user}
+                                value={exercise.username}
+                                selected
+                            >
+                                {user}
+                            </option>
+                            ) : (
+                            <option
+                                key={user}
+                                value={user}
+                            >
+                                {user}
+                            </option>
+                            )
+                        ))}
                     </select>
                 </div>
                 <div className="form-group">
