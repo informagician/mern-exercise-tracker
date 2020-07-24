@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 
@@ -11,7 +12,6 @@ const ExercisesList = () => {
         axios.get('http://localhost:5000/exercises')
             .then(res => {
                 setExercises(res.data)
-                console.log(res.data)
             })
             .catch(err => console.log(err))
     },[])
@@ -50,8 +50,9 @@ const ExercisesList = () => {
                         <td>{exercise.duration}</td>
                         <td>{exercise.date}</td>
                         <td>
-                            <a href="#" onClick={() => onDelete(exercise._id)}>Delete</a>
-                            <a href={'edit/' + exercise._id}>Edit</a>
+                            <Link to="#" onClick={() => onDelete(exercise._id)}>Delete</Link>
+                            <span> | </span>
+                            <Link to={'edit/' + exercise._id}>Edit</Link>
                         </td>
                     </tr>
                 ))

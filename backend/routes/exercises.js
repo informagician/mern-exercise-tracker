@@ -42,8 +42,6 @@ router.delete('/:id', (req,res) => {
 
 router.post('/update/:id', (req,res) => {
 
-    console.log(req.body)
-
     Exercise.findById(req.params.id)
         .then(exercise => {
             exercise.username = req.body.username

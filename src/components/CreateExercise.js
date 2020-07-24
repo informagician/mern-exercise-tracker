@@ -19,7 +19,8 @@ const CreateExercise = () => {
         axios.get('http://localhost:5000/users')
             .then(res => {
                 res.data.map(user => {
-                    users.push(user.username)   
+                    users.push(user.username)
+                    return users   
                 })
                 setExercise({
                     ...exercise,

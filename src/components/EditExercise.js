@@ -18,30 +18,44 @@ const EditExercise = props => {
     let id = match.params.id
 
     useEffect(() => {
-        
-        initialFetch()
-    }, [])
 
-    const initialFetch = async () => {
-        try {
+        let usersList;
 
-            const exercises = await axios.get("http://localhost:5000/exercises/" + id);
-            const users = await axios.get("http://localhost:5000/users");
-            let modifiedUsers = users.data.map((user) => user.username);
-            setExercise({
-                ...exercise,
-                username: exercises.data.username,
-                description: exercises.data.description,
-                duration: exercises.data.duration,
-                date: new Date(exercises.data.date),
-                users: modifiedUsers,
-            });
-        } catch(error){
-            console.log(error)
-        }
-    };
-    
+        axios.get("http://localhost:5000/users/")
+            .then(res => {
+                usersList = res.data.map(user => user.username);
+            })
+            .then(users => {
+                axios.get('http://localhost:5000/exercises/' + id)
+                .then(res => setExercise({
+                    username: res.data.username,
+                    description: res.data.description,
+                    duration: res.data.duration,
+                    date: new Date(res.data.date),
+                    users: usersList
+                }))
+            })
+            .catch(err => console.log(err))
+    },[id])
 
+    // const initialFetch = async () => {
+    //     try {
+
+    //         const exercises = await axios.get("http://localhost:5000/exercises/" + id);
+    //         const users = await axios.get("http://localhost:5000/users");
+    //         let modifiedUsers = users.data.map((user) => user.username);
+    //         setExercise({
+    //             ...exercise,
+    //             username: exercises.data.username,
+    //             description: exercises.data.description,
+    //             duration: exercises.data.duration,
+    //             date: new Date(exercises.data.date),
+    //             users: modifiedUsers,
+    //         });
+    //     } catch(error){
+    //         console.log(error)
+    //     }
+    // };
 
     const onChange = e => {
         setExercise({
